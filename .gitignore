@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Build artefacts
+build/
+dist/
+*.spec
+*.exe
+*.msi
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Secrets / config local
+.env
+.env.local
+config.local.*
+deploy/**/cloudflared-credentials.json
+*.pem
+*.key
+
+# Cache local
+data/cache/
+data/local/
+*.log
