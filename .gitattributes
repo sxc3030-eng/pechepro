@@ -1,0 +1,48 @@
+# pechepro — git attributes
+# Normalize line endings cross-platform.
+
+# Auto-detect text vs binary
+* text=auto eol=lf
+
+# Code (LF always)
+*.py    text eol=lf diff=python
+*.sql   text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.json  text eol=lf
+*.toml  text eol=lf
+*.cfg   text eol=lf
+*.ini   text eol=lf
+*.html  text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
+*.txt   text eol=lf
+*.csv   text eol=lf
+
+# Windows-only files (CRLF preserved)
+*.ps1   text eol=crlf
+*.psm1  text eol=crlf
+*.psd1  text eol=crlf
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.iss   text eol=crlf
+
+# Binaries (no transformation)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.exe   binary
+*.dll   binary
+*.zip   binary
+*.gz    binary
+*.7z    binary
+*.db    binary
+*.sqlite binary
+*.sqlite3 binary
+*.so    binary
+*.pdf   binary
+
+# LFS not used in V0.1

@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pechepro"
+version = "0.1.0-dev"
+description = "Application Windows standalone de pêche en Amérique du Nord"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "Proprietary" }
+authors = [{ name = "Master / sxc3030-eng" }]
+keywords = ["fishing", "peche", "north-america", "desktop", "windows"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3.13",
+]
+
+dependencies = [
+    "pywebview==5.4",
+    "flask==3.0.3",
+    "jinja2==3.1.4",
+    "httpx==0.28.1",
+    "astral==3.2",
+    "skyfield==1.49",
+    "winsdk==1.0.0b10; sys_platform == 'win32'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",
+    "pytest-asyncio==0.24.0",
+    "respx==0.21.1",
+    "freezegun==1.5.1",
+    "ruff==0.8.4",
+    "mypy==1.13.0",
+    "pre-commit==4.0.1",
+]
+build = [
+    "pyinstaller==6.11.1",
+]
+
+[project.scripts]
+pechepro = "app.shell:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["tests*", "data*", "deploy*", "docs*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "--strict-markers -ra"
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "smoke: end-to-end smoke tests (slow, requires network or full app launch)",
+    "network: tests that require external network access",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["app/shell.py"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+exclude_lines = ["pragma: no cover", "if __name__ == .__main__.:"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["data", "deploy", "docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "B", "UP", "C90", "S", "RUF"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S", "B011"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_unimported = true
+exclude = ["tests/", "deploy/", "data/"]
