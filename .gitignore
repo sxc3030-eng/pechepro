@@ -17,6 +17,7 @@ htmlcov/
 build/
 dist/
 *.spec
+!deploy/**/*.spec
 *.exe
 *.msi
 
@@ -39,3 +40,10 @@ deploy/**/cloudflared-credentials.json
 data/cache/
 data/local/
 *.log
+
+# Worktrees (children of main, each has its own .git link)
+.claude/worktrees/
+
+# Coverage
+coverage.xml
+.hypothesis/
