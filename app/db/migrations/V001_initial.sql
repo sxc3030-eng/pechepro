@@ -1,0 +1,3 @@
+-- V001 — initial schema. Identical to schema.sql for V0.1.
+-- Future migrations will be V002_*, V003_*, etc.
+-- For V0.1, schema.sql is the source of truth ; this file exists for future Alembic-style runner.
