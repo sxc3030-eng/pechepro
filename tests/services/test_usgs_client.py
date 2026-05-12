@@ -227,7 +227,7 @@ _USGS_MISSING_VALUE_BODY: dict = {
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_returns_celsius_for_us_lat_lon() -> None:
     """Valid US location with nearby station returns float in Celsius."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_OK_BODY)
         )
@@ -240,11 +240,12 @@ def test_get_water_temp_returns_celsius_for_us_lat_lon() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_returns_none_for_canadian_lat_lon() -> None:
     """Outside US (Lévis QC) returns None and never hits the API."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx", assert_all_called=False) as router:
         route = router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_OK_BODY)
         )
-        # Lévis QC: 46.81 lat is inside US lat range, but -71.21 lon is east of US bbox
+        # Lévis QC: 46.81 lat is inside the rough US lat range, but the piecewise
+        # eastern-US lat cap rejects anything north of ~45.5°N in this lon band.
         result = usgs_client.get_water_temp(lat=46.81, lon=-71.21)
 
     assert result is None
@@ -254,7 +255,7 @@ def test_get_water_temp_returns_none_for_canadian_lat_lon() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_returns_none_for_mexican_lat_lon() -> None:
     """Outside US (Mexico City) returns None and never hits the API."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx", assert_all_called=False) as router:
         route = router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_OK_BODY)
         )
@@ -276,7 +277,7 @@ def test_get_water_temp_returns_none_for_invalid_coords() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_no_station_returns_none() -> None:
     """Valid US location but USGS returns no timeSeries → None."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_EMPTY_BODY)
         )
@@ -288,7 +289,7 @@ def test_get_water_temp_no_station_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_no_station_within_50km_returns_none() -> None:
     """Valid US location, station exists but is >50km away → None."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_FAR_STATION_BODY)
         )
@@ -300,7 +301,7 @@ def test_get_water_temp_no_station_within_50km_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_timeout_returns_none() -> None:
     """USGS API timeout returns None (logged, no crash)."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             side_effect=httpx.TimeoutException("timeout")
         )
@@ -312,7 +313,7 @@ def test_get_water_temp_timeout_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_5xx_returns_none() -> None:
     """USGS API 5xx returns None."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(503)
         )
@@ -324,7 +325,7 @@ def test_get_water_temp_5xx_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_network_error_returns_none() -> None:
     """Generic network error returns None."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             side_effect=httpx.ConnectError("connection refused")
         )
@@ -336,7 +337,7 @@ def test_get_water_temp_network_error_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_malformed_json_returns_none() -> None:
     """USGS returns invalid JSON → None."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, text="<html>nope</html>")
         )
@@ -348,7 +349,7 @@ def test_get_water_temp_malformed_json_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_stale_reading_returns_none() -> None:
     """Station exists but no temp reading in last 7 days → None."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_STALE_BODY)
         )
@@ -360,7 +361,7 @@ def test_get_water_temp_stale_reading_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_missing_value_sentinel_returns_none() -> None:
     """USGS uses -999999 to mark missing readings — must be filtered out."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_MISSING_VALUE_BODY)
         )
@@ -372,7 +373,7 @@ def test_get_water_temp_missing_value_sentinel_returns_none() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_picks_closest_station_by_haversine() -> None:
     """When multiple stations are returned, the closest one wins."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_TWO_STATIONS_BODY)
         )
@@ -385,7 +386,7 @@ def test_get_water_temp_picks_closest_station_by_haversine() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_sends_parameter_cd_00010() -> None:
     """USGS expects parameterCd=00010 for water temperature (Celsius)."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         route = router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_OK_BODY)
         )
@@ -401,7 +402,7 @@ def test_get_water_temp_sends_parameter_cd_00010() -> None:
 @freeze_time("2026-06-21T12:30:00Z")
 def test_get_water_temp_sends_bbox_around_lat_lon() -> None:
     """Bbox is computed around the requested lat/lon (~0.5°)."""
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         route = router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=_USGS_OK_BODY)
         )
@@ -481,9 +482,153 @@ def test_get_water_temp_handles_datetime_at_7day_boundary() -> None:
             ]
         }
     }
-    with respx.mock() as router:
+    with respx.mock(using="httpx") as router:
         router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
             return_value=httpx.Response(200, json=body)
         )
         result = usgs_client.get_water_temp(lat=44.5, lon=-72.0)
     assert result == pytest.approx(17.5)
+
+
+def test_parse_usgs_datetime_empty_returns_none() -> None:
+    assert usgs_client._parse_usgs_datetime("") is None
+
+
+def test_parse_usgs_datetime_invalid_returns_none() -> None:
+    assert usgs_client._parse_usgs_datetime("not-a-datetime") is None
+
+
+def test_parse_usgs_datetime_naive_gets_utc_tzinfo() -> None:
+    """USGS values are normally tz-aware, but we defensively add UTC if missing."""
+    parsed = usgs_client._parse_usgs_datetime("2026-06-21T12:00:00")
+    assert parsed is not None
+    assert parsed.tzinfo is dt.UTC
+
+
+def test_is_in_us_rejects_lon_outside_range() -> None:
+    """Longitude outside [-125, -66.9] is rejected without consulting the lat cap."""
+    assert not usgs_client._is_in_us(40.0, 0.0)  # London-ish, far east
+    assert not usgs_client._is_in_us(40.0, -130.0)  # Mid-Pacific
+
+
+@freeze_time("2026-06-21T12:30:00Z")
+def test_get_water_temp_station_missing_geo_returns_none() -> None:
+    """Station entry without geoLocation is skipped."""
+    body = {
+        "value": {
+            "timeSeries": [
+                {
+                    "sourceInfo": {"siteName": "NO COORDS"},
+                    "variable": {
+                        "variableCode": [{"value": "00010"}],
+                        "unit": {"unitCode": "deg C"},
+                    },
+                    "values": [
+                        {
+                            "value": [
+                                {
+                                    "value": "15.0",
+                                    "qualifiers": ["P"],
+                                    "dateTime": "2026-06-21T12:00:00.000-05:00",
+                                }
+                            ]
+                        }
+                    ],
+                }
+            ]
+        }
+    }
+    with respx.mock(using="httpx") as router:
+        router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
+            return_value=httpx.Response(200, json=body)
+        )
+        result = usgs_client.get_water_temp(lat=44.5, lon=-72.0)
+    assert result is None
+
+
+@freeze_time("2026-06-21T12:30:00Z")
+def test_get_water_temp_sample_with_non_numeric_value_skipped() -> None:
+    """A value field that isn't a float is skipped, not crashed on."""
+    body = {
+        "value": {
+            "timeSeries": [
+                {
+                    "sourceInfo": {
+                        "siteName": "JUNK VALUE",
+                        "geoLocation": {"geogLocation": {"latitude": 44.5, "longitude": -72.0}},
+                    },
+                    "variable": {
+                        "variableCode": [{"value": "00010"}],
+                        "unit": {"unitCode": "deg C"},
+                    },
+                    "values": [
+                        {
+                            "value": [
+                                {
+                                    "value": "not-a-number",
+                                    "qualifiers": ["P"],
+                                    "dateTime": "2026-06-21T12:00:00.000-05:00",
+                                }
+                            ]
+                        }
+                    ],
+                }
+            ]
+        }
+    }
+    with respx.mock(using="httpx") as router:
+        router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
+            return_value=httpx.Response(200, json=body)
+        )
+        result = usgs_client.get_water_temp(lat=44.5, lon=-72.0)
+    assert result is None
+
+
+@freeze_time("2026-06-21T12:30:00Z")
+def test_get_water_temp_sample_with_bad_datetime_skipped() -> None:
+    """A sample with an unparseable dateTime is skipped."""
+    body = {
+        "value": {
+            "timeSeries": [
+                {
+                    "sourceInfo": {
+                        "siteName": "BAD DATETIME",
+                        "geoLocation": {"geogLocation": {"latitude": 44.5, "longitude": -72.0}},
+                    },
+                    "variable": {
+                        "variableCode": [{"value": "00010"}],
+                        "unit": {"unitCode": "deg C"},
+                    },
+                    "values": [
+                        {
+                            "value": [
+                                {
+                                    "value": "12.0",
+                                    "qualifiers": ["P"],
+                                    "dateTime": "garbage",
+                                }
+                            ]
+                        }
+                    ],
+                }
+            ]
+        }
+    }
+    with respx.mock(using="httpx") as router:
+        router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
+            return_value=httpx.Response(200, json=body)
+        )
+        result = usgs_client.get_water_temp(lat=44.5, lon=-72.0)
+    assert result is None
+
+
+@freeze_time("2026-06-21T12:30:00Z")
+def test_get_water_temp_timeseries_not_a_list_returns_none() -> None:
+    """Defensive: if USGS returns timeSeries as something other than a list, bail."""
+    body = {"value": {"timeSeries": "not a list"}}
+    with respx.mock(using="httpx") as router:
+        router.get(url__regex=r"https://waterservices\.usgs\.gov/.*").mock(
+            return_value=httpx.Response(200, json=body)
+        )
+        result = usgs_client.get_water_temp(lat=44.5, lon=-72.0)
+    assert result is None
