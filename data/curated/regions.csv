@@ -1,0 +1,66 @@
+﻿id,name_fr,name_en,country,iso_code,bbox_lat_min,bbox_lat_max,bbox_lon_min,bbox_lon_max
+1,Alberta,Alberta,CA,AB,49.0,60.0,-120.0,-110.0
+2,Colombie-Britannique,British Columbia,CA,BC,48.3,60.0,-139.1,-114.0
+3,Manitoba,Manitoba,CA,MB,49.0,60.0,-102.0,-89.0
+4,Nouveau-Brunswick,New Brunswick,CA,NB,44.5,48.1,-69.1,-63.7
+5,Terre-Neuve-et-Labrador,Newfoundland and Labrador,CA,NL,46.5,60.4,-67.8,-52.6
+6,Nouvelle-Écosse,Nova Scotia,CA,NS,43.4,47.1,-66.5,-59.7
+7,Territoires du Nord-Ouest,Northwest Territories,CA,NT,60.0,79.0,-136.0,-102.0
+8,Nunavut,Nunavut,CA,NU,60.0,83.0,-110.0,-61.0
+9,Ontario,Ontario,CA,ON,41.7,56.9,-95.2,-74.3
+10,Île-du-Prince-Édouard,Prince Edward Island,CA,PE,45.9,47.1,-64.5,-61.9
+11,Québec,Quebec,CA,QC,45.0,62.6,-79.8,-57.0
+12,Saskatchewan,Saskatchewan,CA,SK,49.0,60.0,-110.0,-101.3
+13,Yukon,Yukon,CA,YT,60.0,69.7,-141.0,-124.0
+14,Alabama,Alabama,US,AL,30.2,35.0,-88.5,-84.9
+15,Alaska,Alaska,US,AK,51.2,71.4,-179.1,-129.9
+16,Arizona,Arizona,US,AZ,31.3,37.0,-114.8,-109.0
+17,Arkansas,Arkansas,US,AR,33.0,36.5,-94.6,-89.6
+18,Californie,California,US,CA,32.5,42.0,-124.5,-114.1
+19,Colorado,Colorado,US,CO,37.0,41.0,-109.1,-102.0
+20,Connecticut,Connecticut,US,CT,40.9,42.1,-73.7,-71.8
+21,Delaware,Delaware,US,DE,38.4,39.8,-75.8,-75.0
+22,Floride,Florida,US,FL,24.5,31.0,-87.6,-80.0
+23,Géorgie,Georgia,US,GA,30.3,35.0,-85.6,-80.8
+24,Hawaï,Hawaii,US,HI,18.9,22.2,-160.3,-154.8
+25,Idaho,Idaho,US,ID,42.0,49.0,-117.2,-111.0
+26,Illinois,Illinois,US,IL,36.9,42.5,-91.5,-87.0
+27,Indiana,Indiana,US,IN,37.8,41.8,-88.1,-84.8
+28,Iowa,Iowa,US,IA,40.4,43.5,-96.6,-90.1
+29,Kansas,Kansas,US,KS,37.0,40.0,-102.1,-94.6
+30,Kentucky,Kentucky,US,KY,36.5,39.1,-89.6,-81.9
+31,Louisiane,Louisiana,US,LA,28.9,33.0,-94.1,-88.8
+32,Maine,Maine,US,ME,43.1,47.5,-71.1,-66.9
+33,Maryland,Maryland,US,MD,37.9,39.7,-79.5,-75.0
+34,Massachusetts,Massachusetts,US,MA,41.2,42.9,-73.5,-69.9
+35,Michigan,Michigan,US,MI,41.7,48.3,-90.4,-82.4
+36,Minnesota,Minnesota,US,MN,43.5,49.4,-97.2,-89.5
+37,Mississippi,Mississippi,US,MS,30.2,35.0,-91.7,-88.1
+38,Missouri,Missouri,US,MO,36.0,40.6,-95.8,-89.1
+39,Montana,Montana,US,MT,45.0,49.0,-116.1,-104.0
+40,Nebraska,Nebraska,US,NE,40.0,43.0,-104.1,-95.3
+41,Nevada,Nevada,US,NV,35.0,42.0,-120.0,-114.0
+42,New Hampshire,New Hampshire,US,NH,42.7,45.3,-72.6,-70.6
+43,New Jersey,New Jersey,US,NJ,38.9,41.4,-75.6,-73.9
+44,Nouveau-Mexique,New Mexico,US,NM,31.3,37.0,-109.1,-103.0
+45,New York,New York,US,NY,40.5,45.0,-79.8,-71.8
+46,Caroline du Nord,North Carolina,US,NC,33.8,36.6,-84.3,-75.5
+47,Dakota du Nord,North Dakota,US,ND,45.9,49.0,-104.1,-96.6
+48,Ohio,Ohio,US,OH,38.4,42.0,-84.8,-80.5
+49,Oklahoma,Oklahoma,US,OK,33.6,37.0,-103.0,-94.4
+50,Oregon,Oregon,US,OR,42.0,46.3,-124.6,-116.5
+51,Pennsylvanie,Pennsylvania,US,PA,39.7,42.3,-80.5,-74.7
+52,Rhode Island,Rhode Island,US,RI,41.1,42.1,-71.9,-71.1
+53,Caroline du Sud,South Carolina,US,SC,32.0,35.2,-83.4,-78.5
+54,Dakota du Sud,South Dakota,US,SD,42.5,45.9,-104.1,-96.4
+55,Tennessee,Tennessee,US,TN,35.0,36.7,-90.3,-81.6
+56,Texas,Texas,US,TX,25.8,36.5,-106.7,-93.5
+57,Utah,Utah,US,UT,37.0,42.0,-114.1,-109.0
+58,Vermont,Vermont,US,VT,42.7,45.0,-73.5,-71.5
+59,Virginie,Virginia,US,VA,36.5,39.5,-83.7,-75.2
+60,Washington,Washington,US,WA,45.5,49.0,-124.8,-116.9
+61,Virginie-Occidentale,West Virginia,US,WV,37.2,40.6,-82.6,-77.7
+62,Wisconsin,Wisconsin,US,WI,42.5,47.1,-92.9,-86.8
+63,Wyoming,Wyoming,US,WY,41.0,45.0,-111.1,-104.1
+64,Sonora,Sonora,MX,SON,26.3,32.5,-115.1,-108.4
+65,Chihuahua,Chihuahua,MX,CHH,25.6,31.8,-109.0,-103.3
