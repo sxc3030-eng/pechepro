@@ -245,3 +245,60 @@ def test_sync_malformed_csv_does_not_corrupt_db(empty_db: sqlite3.Connection) ->
         "SELECT COUNT(*) FROM data_sync_meta WHERE table_name = ?", ("species",)
     ).fetchone()
     assert meta[0] == 0
+
+
+# ---------------------------------------------------------------------------
+# Exact GitHub raw URL + If-None-Match wiring
+# ---------------------------------------------------------------------------
+
+
+@freeze_time("2026-06-21 12:00:00")
+def test_sync_uses_correct_github_raw_url(empty_db: sqlite3.Connection) -> None:
+    """The URL hit must be the canonical one in the spec (sxc3030-eng/pechepro/main)."""
+    with respx.mock() as router:
+        species_route = router.get(
+            "https://raw.githubusercontent.com/sxc3030-eng/pechepro/main/data/curated/species.csv"
+        ).mock(
+            return_value=httpx.Response(
+                200,
+                content=_SPECIES_CSV.encode("utf-8"),
+                headers={"ETag": '"abc"'},
+            )
+        )
+        # Any other curated path: 404
+        router.route().mock(return_value=httpx.Response(404))
+
+        data_sync.sync_curated_data(empty_db, force=True)
+
+    assert species_route.called
+    assert species_route.call_count == 1
+
+
+@freeze_time("2026-06-21 12:00:00")
+def test_sync_sends_if_none_match_when_etag_known(
+    empty_db: sqlite3.Connection,
+) -> None:
+    """When the previous ETag is in meta, it is sent as ``If-None-Match`` on retry."""
+    empty_db.execute(
+        "INSERT INTO data_sync_meta (table_name, last_synced_at, last_etag, row_count) "
+        "VALUES (?, ?, ?, ?)",
+        (
+            "species",
+            (dt.datetime.now(dt.UTC) - dt.timedelta(hours=26)).isoformat(),
+            '"prev-etag"',
+            5,
+        ),
+    )
+    empty_db.commit()
+
+    with respx.mock() as router:
+        species_route = router.get(
+            "https://raw.githubusercontent.com/sxc3030-eng/pechepro/main/data/curated/species.csv"
+        ).mock(return_value=httpx.Response(304))
+        router.route().mock(return_value=httpx.Response(404))
+
+        data_sync.sync_curated_data(empty_db, force=False)
+
+    assert species_route.call_count == 1
+    sent_header = species_route.calls.last.request.headers.get("If-None-Match")
+    assert sent_header == '"prev-etag"'
