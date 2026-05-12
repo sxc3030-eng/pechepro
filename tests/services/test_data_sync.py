@@ -302,3 +302,41 @@ def test_sync_sends_if_none_match_when_etag_known(
     assert species_route.call_count == 1
     sent_header = species_route.calls.last.request.headers.get("If-None-Match")
     assert sent_header == '"prev-etag"'
+
+
+# ---------------------------------------------------------------------------
+# Cold-start: empty data_sync_meta
+# ---------------------------------------------------------------------------
+
+
+@freeze_time("2026-06-21 12:00:00")
+def test_sync_first_run_no_meta_rows(empty_db: sqlite3.Connection) -> None:
+    """Cold start (data_sync_meta empty) → all reachable tables fetched."""
+    csvs = {
+        "species": _SPECIES_CSV,
+        "water_types": "id,name_fr,name_en\n1,Lac,Lake\n",
+    }
+    with respx.mock() as router:
+        for table, body in csvs.items():
+            url = (
+                "https://raw.githubusercontent.com/sxc3030-eng/pechepro/main/"
+                f"data/curated/{table}.csv"
+            )
+            router.get(url).mock(
+                return_value=httpx.Response(
+                    200,
+                    content=body.encode("utf-8"),
+                    headers={"ETag": f'"{table}-1"'},
+                )
+            )
+        router.route().mock(return_value=httpx.Response(404))
+
+        result = data_sync.sync_curated_data(empty_db, force=False)
+
+    assert "species" in result["tables_synced"]
+    assert "water_types" in result["tables_synced"]
+    # Meta rows now exist for the synced tables
+    rows = empty_db.execute("SELECT table_name FROM data_sync_meta ORDER BY table_name").fetchall()
+    table_names = {r[0] for r in rows}
+    assert "species" in table_names
+    assert "water_types" in table_names
