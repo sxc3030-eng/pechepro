@@ -623,3 +623,276 @@ def test_500_returns_html_for_page_routes(seeded_db: Path) -> None:
         resp = client.get("/page-boom")
         assert resp.status_code == 500
         assert resp.content_type.startswith("text/html")
+
+
+# ─────────── Task 20: base.html assertions ───────────
+
+
+def test_base_template_lang_attribute_matches_config(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="fr", testing=True))
+    with app.test_client() as client:
+        body = client.get("/").get_data(as_text=True)
+        assert '<html lang="fr"' in body
+
+
+def test_base_template_has_lang_toggle_link(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/").get_data(as_text=True)
+        assert "Français" in body  # footer toggle text in EN catalog
+
+
+def test_base_template_includes_expedia_widget_on_conditions(seeded_db: Path) -> None:
+    p = _common_service_payloads()
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with (
+        patch("app.services.openmeteo_client.get_weather", return_value=p["weather"]),
+        patch("app.services.astral_calc.sun_moon", return_value=p["sun_moon"]),
+        patch(
+            "app.services.solunar.compute_periods",
+            return_value={"major": [], "minor": []},
+        ),
+        patch("app.services.recommender.recommend", return_value=[]),
+        patch("app.services.usgs_client.get_water_temp", return_value=None),
+        patch("app.services.eccc_client.get_water_temp", return_value=None),
+    ):
+        with app.test_client() as client:
+            body = client.get(
+                "/conditions?species=1&water=1&region=1&lat=46.81&lon=-71.21"
+            ).get_data(as_text=True)
+            assert 'data-camref="1101l5IQud"' in body
+            assert 'data-pubref="pechepro-tips"' in body
+            assert "eg-affiliate-banners.js" in body
+
+
+# ─────────── Task 21: home.html assertions ───────────
+
+
+def test_home_template_has_form_with_required_selects(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/").get_data(as_text=True)
+        assert 'id="recommend-form"' in body
+        assert 'name="species"' in body
+        assert 'name="water"' in body
+        assert 'name="region"' in body
+        assert 'id="use-gps"' in body
+
+
+def test_home_template_form_action_is_conditions(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/").get_data(as_text=True)
+        assert 'action="/conditions"' in body
+
+
+def test_home_template_includes_loading_indicator(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/").get_data(as_text=True)
+        assert "Loading" in body or "loading" in body.lower()
+
+
+# ─────────── Task 22: conditions.html assertions ───────────
+
+
+def test_conditions_template_renders_water_temp_when_present(seeded_db: Path) -> None:
+    p = _common_service_payloads()
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with (
+        patch("app.services.openmeteo_client.get_weather", return_value=p["weather"]),
+        patch("app.services.astral_calc.sun_moon", return_value=p["sun_moon"]),
+        patch(
+            "app.services.solunar.compute_periods",
+            return_value={"major": [], "minor": []},
+        ),
+        patch("app.services.recommender.recommend", return_value=[]),
+        patch("app.services.usgs_client.get_water_temp", return_value=14.5),
+    ):
+        with app.test_client() as client:
+            body = client.get(
+                "/conditions?species=1&water=1&region=1&lat=46.81&lon=-71.21"
+            ).get_data(as_text=True)
+            assert "14.5" in body
+
+
+def test_conditions_template_renders_solunar_periods(seeded_db: Path) -> None:
+    p = _common_service_payloads()
+    solunar = {
+        "major": [{"start": "08:00", "end": "10:00", "score": 0.9}],
+        "minor": [{"start": "14:00", "end": "15:00", "score": 0.5}],
+    }
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with (
+        patch("app.services.openmeteo_client.get_weather", return_value=p["weather"]),
+        patch("app.services.astral_calc.sun_moon", return_value=p["sun_moon"]),
+        patch("app.services.solunar.compute_periods", return_value=solunar),
+        patch("app.services.recommender.recommend", return_value=[]),
+        patch("app.services.usgs_client.get_water_temp", return_value=None),
+        patch("app.services.eccc_client.get_water_temp", return_value=None),
+    ):
+        with app.test_client() as client:
+            body = client.get(
+                "/conditions?species=1&water=1&region=1&lat=46.81&lon=-71.21"
+            ).get_data(as_text=True)
+            assert "08:00" in body
+            assert "0.9" in body
+
+
+def test_conditions_template_shows_confidence_badge(seeded_db: Path) -> None:
+    p = _common_service_payloads()
+    tip = {
+        "id": 1,
+        "tip_text_fr": "FR",
+        "tip_text_en": "Tip text",
+        "source_url": "https://example.com",
+        "confidence": 5,
+        "match_score": 0.8,
+    }
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with (
+        patch("app.services.openmeteo_client.get_weather", return_value=p["weather"]),
+        patch("app.services.astral_calc.sun_moon", return_value=p["sun_moon"]),
+        patch(
+            "app.services.solunar.compute_periods",
+            return_value={"major": [], "minor": []},
+        ),
+        patch("app.services.recommender.recommend", return_value=[tip]),
+        patch("app.services.usgs_client.get_water_temp", return_value=None),
+        patch("app.services.eccc_client.get_water_temp", return_value=None),
+    ):
+        with app.test_client() as client:
+            body = client.get(
+                "/conditions?species=1&water=1&region=1&lat=46.81&lon=-71.21"
+            ).get_data(as_text=True)
+            assert "Confidence" in body
+            assert "5" in body
+
+
+# ─────────── Task 23: tips.html assertions ───────────
+
+
+def test_tips_template_has_species_filter_dropdown(seeded_db: Path) -> None:
+    _seed_one_tip(seeded_db)
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/tips").get_data(as_text=True)
+        assert 'id="filter-species"' in body
+        assert "Filter by species" in body
+
+
+def test_tips_template_renders_confidence_badge(seeded_db: Path) -> None:
+    _seed_one_tip(seeded_db)
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/tips").get_data(as_text=True)
+        assert "Confidence" in body
+        assert "4" in body  # confidence value seeded
+
+
+# ─────────── Tasks 24-26: CSS ───────────
+
+
+def test_static_css_is_served(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        resp = client.get("/static/css/style.css")
+        assert resp.status_code == 200
+        assert resp.content_type.startswith("text/css")
+        body = resp.get_data(as_text=True)
+        assert "--color-peach" in body or "--color-primary" in body
+        assert ":root" in body
+
+
+def test_style_css_has_reset_rules(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/static/css/style.css").get_data(as_text=True)
+        assert "box-sizing" in body
+        assert "margin: 0" in body or "margin:0" in body
+
+
+def test_style_css_has_typography_section(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/static/css/style.css").get_data(as_text=True)
+        assert "Inter" in body
+        assert "JetBrains Mono" in body
+        assert "h1" in body and "h2" in body
+
+
+def test_style_css_has_component_classes(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/static/css/style.css").get_data(as_text=True)
+        for cls in (
+            ".card",
+            ".btn",
+            ".btn-primary",
+            ".btn-secondary",
+            ".badge",
+            ".badge-major",
+            ".badge-minor",
+            ".alert",
+            ".grid",
+            ".topbar",
+            "footer",
+        ):
+            assert cls in body, f"missing class {cls}"
+
+
+# ─────────── Tasks 27-28: main.js ───────────
+
+
+def test_main_js_is_served(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        resp = client.get("/static/js/main.js")
+        assert resp.status_code == 200
+        assert "javascript" in resp.content_type or "text/javascript" in resp.content_type
+
+
+def test_main_js_has_fetch_json_helper(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/static/js/main.js").get_data(as_text=True)
+        assert "fetchJson" in body or "fetch_json" in body
+        assert "/api/species" in body
+        assert "/api/regions" in body
+        assert "/api/water-types" in body
+
+
+def test_main_js_has_geolocation_handler(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/static/js/main.js").get_data(as_text=True)
+        assert "navigator.geolocation" in body
+        assert "use-gps" in body
+        assert "lat" in body and "lon" in body
+
+
+def test_main_js_handles_lang_toggle(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        body = client.get("/static/js/main.js").get_data(as_text=True)
+        assert "lang-toggle" in body
+
+
+# ─────────── Task 29: static assets ───────────
+
+
+def test_logo_ico_is_served(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        resp = client.get("/static/img/logo.ico")
+        assert resp.status_code == 200
+        assert len(resp.data) > 0
+
+
+def test_icon_svgs_are_served(seeded_db: Path) -> None:
+    app = create_app(AppConfig(db_path=seeded_db, lang="en", testing=True))
+    with app.test_client() as client:
+        for name in ("walleye.svg", "lure.svg"):
+            resp = client.get(f"/static/img/icons/{name}")
+            assert resp.status_code == 200
+            assert b"<svg" in resp.data
