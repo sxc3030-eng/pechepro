@@ -1,0 +1,121 @@
+﻿id,water_clarity,light_level,color,visibility_score,notes_fr,notes_en
+1,clear,bright,white,8,Très bonne silhouette générale,Strong general silhouette
+2,clear,bright,chartreuse,8,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+3,clear,bright,black,5,Silhouette nette en basse lumière,Sharp silhouette in low light
+4,clear,bright,red,7,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+5,clear,bright,orange,6,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+6,clear,bright,blue,7,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+7,clear,bright,green,7,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+8,clear,bright,gold,7,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+9,clear,bright,silver,9,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+10,clear,bright,fluorescent_pink,8,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+11,clear,overcast,white,8,Très bonne silhouette générale,Strong general silhouette
+12,clear,overcast,chartreuse,9,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+13,clear,overcast,black,6,Silhouette nette en basse lumière,Sharp silhouette in low light
+14,clear,overcast,red,6,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+15,clear,overcast,orange,7,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+16,clear,overcast,blue,6,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+17,clear,overcast,green,6,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+18,clear,overcast,gold,7,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+19,clear,overcast,silver,7,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+20,clear,overcast,fluorescent_pink,8,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+21,clear,dawn_dusk,white,7,Très bonne silhouette générale,Strong general silhouette
+22,clear,dawn_dusk,chartreuse,8,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+23,clear,dawn_dusk,black,8,Silhouette nette en basse lumière,Sharp silhouette in low light
+24,clear,dawn_dusk,red,4,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+25,clear,dawn_dusk,orange,6,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+26,clear,dawn_dusk,blue,4,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+27,clear,dawn_dusk,green,4,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+28,clear,dawn_dusk,gold,8,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+29,clear,dawn_dusk,silver,6,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+30,clear,dawn_dusk,fluorescent_pink,7,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+31,clear,night,white,5,Très bonne silhouette générale,Strong general silhouette
+32,clear,night,chartreuse,5,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+33,clear,night,black,9,Silhouette nette en basse lumière,Sharp silhouette in low light
+34,clear,night,red,2,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+35,clear,night,orange,4,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+36,clear,night,blue,2,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+37,clear,night,green,2,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+38,clear,night,gold,5,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+39,clear,night,silver,4,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+40,clear,night,fluorescent_pink,5,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+41,stained,bright,white,9,Très bonne silhouette générale,Strong general silhouette
+42,stained,bright,chartreuse,10,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+43,stained,bright,black,4,Silhouette nette en basse lumière,Sharp silhouette in low light
+44,stained,bright,red,5,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+45,stained,bright,orange,8,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+46,stained,bright,blue,4,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+47,stained,bright,green,5,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+48,stained,bright,gold,9,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+49,stained,bright,silver,7,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+50,stained,bright,fluorescent_pink,9,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+51,stained,overcast,white,9,Très bonne silhouette générale,Strong general silhouette
+52,stained,overcast,chartreuse,10,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+53,stained,overcast,black,5,Silhouette nette en basse lumière,Sharp silhouette in low light
+54,stained,overcast,red,5,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+55,stained,overcast,orange,8,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+56,stained,overcast,blue,4,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+57,stained,overcast,green,5,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+58,stained,overcast,gold,9,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+59,stained,overcast,silver,6,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+60,stained,overcast,fluorescent_pink,9,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+61,stained,dawn_dusk,white,8,Très bonne silhouette générale,Strong general silhouette
+62,stained,dawn_dusk,chartreuse,9,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+63,stained,dawn_dusk,black,7,Silhouette nette en basse lumière,Sharp silhouette in low light
+64,stained,dawn_dusk,red,3,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+65,stained,dawn_dusk,orange,7,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+66,stained,dawn_dusk,blue,3,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+67,stained,dawn_dusk,green,4,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+68,stained,dawn_dusk,gold,8,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+69,stained,dawn_dusk,silver,5,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+70,stained,dawn_dusk,fluorescent_pink,8,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+71,stained,night,white,6,Très bonne silhouette générale,Strong general silhouette
+72,stained,night,chartreuse,7,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+73,stained,night,black,9,Silhouette nette en basse lumière,Sharp silhouette in low light
+74,stained,night,red,2,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+75,stained,night,orange,5,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+76,stained,night,blue,2,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+77,stained,night,green,3,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+78,stained,night,gold,6,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+79,stained,night,silver,3,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+80,stained,night,fluorescent_pink,6,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+81,muddy,bright,white,10,Très bonne silhouette générale,Strong general silhouette
+82,muddy,bright,chartreuse,10,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+83,muddy,bright,black,3,Silhouette nette en basse lumière,Sharp silhouette in low light
+84,muddy,bright,red,4,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+85,muddy,bright,orange,9,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+86,muddy,bright,blue,2,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+87,muddy,bright,green,3,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+88,muddy,bright,gold,9,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+89,muddy,bright,silver,4,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+90,muddy,bright,fluorescent_pink,10,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+91,muddy,overcast,white,10,Très bonne silhouette générale,Strong general silhouette
+92,muddy,overcast,chartreuse,10,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+93,muddy,overcast,black,4,Silhouette nette en basse lumière,Sharp silhouette in low light
+94,muddy,overcast,red,3,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+95,muddy,overcast,orange,9,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+96,muddy,overcast,blue,2,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+97,muddy,overcast,green,3,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+98,muddy,overcast,gold,9,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+99,muddy,overcast,silver,3,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+100,muddy,overcast,fluorescent_pink,10,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+101,muddy,dawn_dusk,white,9,Très bonne silhouette générale,Strong general silhouette
+102,muddy,dawn_dusk,chartreuse,10,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+103,muddy,dawn_dusk,black,6,Silhouette nette en basse lumière,Sharp silhouette in low light
+104,muddy,dawn_dusk,red,2,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+105,muddy,dawn_dusk,orange,8,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+106,muddy,dawn_dusk,blue,2,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+107,muddy,dawn_dusk,green,2,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+108,muddy,dawn_dusk,gold,8,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+109,muddy,dawn_dusk,silver,2,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+110,muddy,dawn_dusk,fluorescent_pink,9,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"
+111,muddy,night,white,7,Très bonne silhouette générale,Strong general silhouette
+112,muddy,night,chartreuse,8,"Forte visibilité, idéal eaux teintées","High visibility, ideal in stained water"
+113,muddy,night,black,9,Silhouette nette en basse lumière,Sharp silhouette in low light
+114,muddy,night,red,1,Perd sa longueur donde rapidement avec la profondeur,Red wavelength absorbs fastest with depth
+115,muddy,night,orange,6,Visible en eau teintée et ciel couvert,Visible in stained water and overcast skies
+116,muddy,night,blue,1,Naturel en eau claire avec soleil franc,Most natural in clear water under direct sun
+117,muddy,night,green,2,Imite algues et plancton en eau claire,Imitates algae and plankton in clear water
+118,muddy,night,gold,6,"Reflète la lumière chaude, gagne en eau teintée","Reflects warm light, wins in stained water"
+119,muddy,night,silver,2,Éclat maximal en eau claire et soleil,Maximum flash in clear water and bright sun
+120,muddy,night,fluorescent_pink,7,"Très contrasté, choix safe en eau brouillée","High contrast, safe pick in dirty water"

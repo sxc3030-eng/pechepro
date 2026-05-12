@@ -1,0 +1,46 @@
+﻿id,species_id,baro_trend,activity_score,notes_fr,notes_en
+1,1,rising,4,"Bass léthargique après le passage du front, ralentir présentations.",Bass lethargic after frontal passage; slow your presentations.
+2,1,falling,9,"Frénésie pré-frontale, période faste pour topwater et power-fishing.","Pre-frontal frenzy, prime window for topwater and power-fishing."
+3,1,steady,7,"Activité régulière, choisir techniques selon humeur du jour.","Steady activity, match technique to mood of the day."
+4,2,rising,5,Achigan à petite bouche ralenti; jigs lents sur structures.,Smallmouth slows down; slow jigs around structure.
+5,2,falling,9,Pré-front: déclenche la chasse en eau peu profonde.,Pre-front triggers shallow chasing.
+6,2,steady,7,"Bon comportement régulier, drop-shot et tube efficaces.",Steady behavior; drop-shot and tube very effective.
+7,3,rising,5,Doré jaune se retire en profondeur; jigs lents bord de talus.,Walleye drops deep; slow jigs on the breakline.
+8,3,falling,8,"Tendance baissière déclenche la chasse, swimbait et crankbait.",Falling barometer triggers chasing; swimbait and crank work.
+9,3,steady,7,"Pattern jour-pour-jour stable, suivre la lumière.",Day-to-day pattern stable; follow the light.
+10,4,rising,5,Doré noir se profondit après front; bouchées timides.,Sauger drops deeper after front; light bites.
+11,4,falling,8,"Activité forte avant un système, présentations agressives.",High activity before weather system; aggressive presentations.
+12,4,steady,6,"Patterns de profondeur stables, jig avec ver de terre.",Stable depth patterns; jig with worm.
+13,5,rising,4,"Brochet apathique, requiert des présentations très lentes.",Pike apathetic; needs very slow presentations.
+14,5,falling,10,"Chasse féroce pré-tempête, gros leurres et vitesse.",Ferocious pre-storm hunt; big lures and speed.
+15,5,steady,7,"Comportement régulier, suivre les herbiers.",Steady behavior; follow weed edges.
+16,6,rising,3,"Maskinongé ferme la bouche après un front, journée difficile.",Muskie clams up after a front; tough day.
+17,6,falling,10,Pré-frontale = fenêtre de mordée la plus chaude.,Pre-frontal is the hottest bite window.
+18,6,steady,6,"Activité modérée, persistance et figure-8 importants.",Moderate activity; persistence and figure-8 matter.
+19,7,rising,6,Truite mouchetée reste active si température maintenue 7-16°C.,Brook trout stays active if water stays 7-16°C.
+20,7,falling,7,"Légère hausse d'activité, surface plus probable.",Mild activity bump; surface action more likely.
+21,7,steady,7,Conditions stables idéales pour pêche à la mouche.,Stable conditions ideal for fly fishing.
+22,8,rising,6,"Arc-en-ciel modérément actif, viser vitesses moyennes.",Rainbow moderately active; aim for medium speeds.
+23,8,falling,8,"Augmentation de l'activité, streamers et mouches noyées.",Activity boost; streamers and wet flies excel.
+24,8,steady,7,"Bon pattern stable, ajuster selon le bug hatch.",Solid steady pattern; adjust to bug hatch.
+25,9,rising,5,"Truite brune méfiante, présentations fines obligées.",Brown trout wary; finesse presentations required.
+26,9,falling,8,"Fenêtre prédatrice s'ouvre, gros streamers efficaces.",Predator window opens; big streamers effective.
+27,9,steady,7,Garder pression légère et tippets fluorocarbone.,Keep pressure light and fluorocarbon tippets.
+28,10,rising,6,"Touladi reste sur la thermocline, jigging lent.",Lake trout stays on thermocline; slow jigging.
+29,10,falling,7,Légère hausse pour la suspension; troller cuillère.,Slight rise on suspension; troll spoons.
+30,10,steady,7,Conditions stables idéales pour pêche en profondeur.,Stable conditions ideal for deep fishing.
+31,11,rising,5,"Saumon hésite à monter, fosses plus profondes.",Salmon hesitant to run; deeper holding pools.
+32,11,falling,8,Système qui approche peut déclencher une montée massive.,Approaching system can trigger a major run.
+33,11,steady,7,Bon timing pour mouche colorée en surface.,Good timing for bright surface flies.
+34,12,rising,5,"Ouananiche redescend en profondeur, troller streamer lent.",Landlocked salmon drops deep; troll slow streamers.
+35,12,falling,8,Pré-frontale: chasse de surface sur les éperlans.,Pre-front: surface chasing on smelt.
+36,12,steady,7,Stable: troller cuillère ou mouche à 3-5 m.,Steady: troll spoon or fly at 3-5 m depth.
+37,13,rising,6,"Perchaude reste active en bancs, jig fin.",Perch stays active in schools; finesse jig.
+38,13,falling,7,"Activité accrue, ver de terre sur jig minimal.",Increased activity; worm on small jig.
+39,13,steady,8,Conditions parfaites pour bancs denses et pêche familiale.,Perfect conditions for dense schools and family fishing.
+40,14,rising,6,Crapet-soleil reste sur structures peu profondes.,Pumpkinseed stays on shallow structures.
+41,14,falling,7,"Pré-frontale: activité en hausse, mouche sèche efficace.",Pre-front: activity rises; dry fly works.
+42,14,steady,8,Conditions stables idéales pour pêche en surface.,Stable conditions ideal for topwater.
+43,15,rising,6,Barbue mange toujours mais cible des appâts naturels.,Catfish still eats but targets natural baits.
+44,15,falling,8,"Très active pré-frontale, foie de poulet et appâts puants.",Very active pre-front; chicken liver and stink baits.
+45,15,steady,7,"Conditions stables, déposer en fosse profonde la nuit.",Stable conditions; bottom-rig in deep holes at night.
