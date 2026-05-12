@@ -151,3 +151,47 @@ def test_sun_moon_boundary_lat_lon_accepted() -> None:
     assert isinstance(result, dict)
     result = astral_calc.sun_moon(lat=-90.0, lon=-180.0, date=dt.date(2026, 6, 21))
     assert isinstance(result, dict)
+
+
+# --- Task 37 : moon phase classifier + illumination boundary tests ----------
+
+
+def test_classify_moon_phase_boundaries() -> None:
+    """Validate the 4-bucket phase classifier at every boundary value.
+
+    Boundary rule (left-inclusive, right-exclusive except the final bucket):
+      [ 0,  7)  -> new
+      [ 7, 14)  -> waxing
+      [14, 21)  -> full
+      [21, 28]  -> waning
+    """
+    classify = astral_calc._classify_moon_phase
+    assert classify(0.0) == "new"
+    assert classify(6.99) == "new"
+    assert classify(7.0) == "waxing"
+    assert classify(13.99) == "waxing"
+    assert classify(14.0) == "full"
+    assert classify(20.99) == "full"
+    assert classify(21.0) == "waning"
+    assert classify(28.0) == "waning"
+
+
+def test_moon_illumination_range_always_in_unit_interval() -> None:
+    """Illumination must always be a float in [0, 1] for any valid phase value."""
+    illum = astral_calc._moon_illumination
+    for phase_val in [0.0, 3.5, 7.0, 10.5, 14.0, 17.5, 21.0, 24.5, 28.0]:
+        result = illum(phase_val)
+        assert isinstance(result, float)
+        assert 0.0 <= result <= 1.0
+
+
+def test_moon_illumination_peaks_at_full_moon() -> None:
+    """Illumination is maximal at phase = 14 (full moon) and minimal at 0 / 28 (new)."""
+    illum = astral_calc._moon_illumination
+    assert illum(14.0) == pytest.approx(1.0, abs=1e-9)
+    assert illum(0.0) == pytest.approx(0.0, abs=1e-9)
+    assert illum(28.0) == pytest.approx(0.0, abs=1e-9)
+    # Symmetric: phase 7 (first quarter) and 21 (last quarter) yield equal illumination
+    assert illum(7.0) == pytest.approx(illum(21.0), abs=1e-9)
+    # First quarter is ~50% illuminated
+    assert illum(7.0) == pytest.approx(0.5, abs=1e-9)
