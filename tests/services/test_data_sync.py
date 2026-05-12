@@ -340,3 +340,22 @@ def test_sync_first_run_no_meta_rows(empty_db: sqlite3.Connection) -> None:
     table_names = {r[0] for r in rows}
     assert "species" in table_names
     assert "water_types" in table_names
+
+
+# ---------------------------------------------------------------------------
+# Transport-level errors: ConnectError (DNS/firewall) is captured
+# ---------------------------------------------------------------------------
+
+
+@freeze_time("2026-06-21 12:00:00")
+def test_sync_connect_error_records_error(empty_db: sqlite3.Connection) -> None:
+    """``httpx.ConnectError`` (DNS / firewall) is treated like a network failure."""
+    with respx.mock() as router:
+        router.route().mock(side_effect=httpx.ConnectError("dns failure"))
+
+        result = data_sync.sync_curated_data(empty_db, force=True)
+
+    assert result["tables_synced"] == []
+    # Every table produced an error, all of which mention network or Connect
+    assert len(result["errors"]) == len(data_sync._SYNC_TABLES)
+    assert all("network" in e or "Connect" in e for e in result["errors"])
