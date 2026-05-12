@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ t('app.title') }}{% block title %}{% endblock %}</title>
+  <meta name="description" content="{{ t('app.tagline') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <img src="{{ url_for('static', filename='img/logo.ico') }}" alt="" width="24" height="24">
+      <span>{{ t('app.title') }}</span>
+    </a>
+    <nav aria-label="main">
+      <a href="/">{{ t('nav.home') }}</a>
+      <a href="/tips">{{ t('nav.tips') }}</a>
+    </nav>
+  </header>
+  <main id="main">{% block main %}{% endblock %}</main>
+  <footer>
+    <p class="disclaimer">{{ t('footer.disclaimer') }}</p>
+    <p class="meta">
+      <a href="#" id="lang-toggle" data-lang="{{ 'fr' if lang == 'en' else 'en' }}">{{ t('footer.lang_toggle') }}</a>
+    </p>
+    {% block footer_widget %}{% endblock %}
+  </footer>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
