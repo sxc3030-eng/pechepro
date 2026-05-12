@@ -89,3 +89,7 @@ warn_unused_configs = true
 disallow_untyped_defs = true
 disallow_any_unimported = true
 exclude = ["tests/", "deploy/", "data/"]
+
+[[tool.mypy.overrides]]
+module = ["skyfield.*", "winsdk.*"]
+ignore_missing_imports = true

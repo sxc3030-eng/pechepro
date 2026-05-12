@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %} — {{ t('tips.title') }}{% endblock %}
+{% block main %}
+  <section class="tips-browse">
+    <header>
+      <h1>{{ t('tips.title') }}</h1>
+      <form method="get" action="/tips" class="filter-bar">
+        <label for="filter-species">{{ t('tips.filter_species') }}</label>
+        <select id="filter-species" name="species" onchange="this.form.submit()">
+          <option value="">— {{ t('loading') }} —</option>
+        </select>
+      </form>
+    </header>
+    {% if tips %}
+      <ul class="tips">
+      {% for tip in tips %}
+        <li class="tip">
+          <p class="tip-text">{% if lang == 'fr' %}{{ tip.tip_text_fr }}{% else %}{{ tip.tip_text_en }}{% endif %}</p>
+          <p class="tip-meta">
+            <small class="species">{{ tip.species_name }}</small>
+            <span class="badge">{{ t('tips.confidence') }}: {{ tip.confidence }}</span>
+            {% if tip.source_url %}<a href="{{ tip.source_url }}" rel="noopener" target="_blank">{{ t('tips.source') }}</a>{% endif %}
+          </p>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">{{ t('errors.no_data') }}</p>
+    {% endif %}
+  </section>
+{% endblock %}

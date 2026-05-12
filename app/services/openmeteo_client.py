@@ -175,16 +175,17 @@ def _fetch_remote_with_retries(lat: float, lon: float) -> dict[str, Any]:
             if 500 <= status < 600:
                 last_error = exc
             else:
-                raise ServiceUnavailable(f"Open-Meteo returned {status} (no retry)") from exc
+                raise ServiceUnavailable("open-meteo", f"returned {status} (no retry)") from exc
         except ValueError as exc:
             # Malformed JSON body — no retry, surface immediately.
-            raise ServiceUnavailable("Open-Meteo returned a malformed body") from exc
+            raise ServiceUnavailable("open-meteo", "returned a malformed body") from exc
 
         if attempt < _MAX_RETRIES:
             time.sleep(_RETRY_BACKOFF_SECONDS * (2**attempt))
 
     raise ServiceUnavailable(
-        f"Open-Meteo unreachable after {_MAX_RETRIES + 1} attempts"
+        "open-meteo",
+        f"unreachable after {_MAX_RETRIES + 1} attempts",
     ) from last_error
 
 

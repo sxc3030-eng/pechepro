@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %} — {{ t('conditions.title') }} — {{ species_name }}{% endblock %}
+{% block main %}
+  <section class="conditions">
+    <header class="conditions-header">
+      <h1>{{ t('conditions.title') }}</h1>
+      <p class="species-name">{{ species_name }}</p>
+    </header>
+
+    <div class="grid">
+      <article class="card weather">
+        <h2>{{ t('conditions.weather') }}</h2>
+        {% if weather_error %}
+          <p class="alert" role="alert">{{ t('errors.weather_unavailable') }}</p>
+          <p class="alert-detail">unavailable: {{ weather_error }}</p>
+        {% else %}
+          <ul class="metrics">
+            <li><span class="label">temp</span><span class="value">{{ "%.1f"|format(weather.temp_air_c) }} °C</span></li>
+            <li><span class="label">{{ t('conditions.pressure') }}</span><span class="value">{{ "%.0f"|format(weather.pressure_hpa) }} hPa</span></li>
+            <li><span class="label">trend 6h</span><span class="value badge badge-{{ weather.pressure_trend_6h }}">{{ weather.pressure_trend_6h }}</span></li>
+            <li><span class="label">wind</span><span class="value">{{ "%.0f"|format(weather.wind_kmh) }} km/h</span></li>
+            <li><span class="label">cloud</span><span class="value">{{ weather.cloud_cover_pct }} %</span></li>
+          </ul>
+        {% endif %}
+        {% if water_temp_c is not none %}
+          <p class="water-temp">water: {{ "%.1f"|format(water_temp_c) }} °C</p>
+        {% endif %}
+      </article>
+
+      <article class="card sun-moon">
+        <h2>{{ t('conditions.sun_moon') }}</h2>
+        <ul class="metrics">
+          <li><span class="label">sunrise</span><span class="value">{{ sun_moon.sunrise }}</span></li>
+          <li><span class="label">sunset</span><span class="value">{{ sun_moon.sunset }}</span></li>
+          <li><span class="label">moon</span><span class="value">{{ sun_moon.moon_phase }} ({{ (sun_moon.moon_illumination * 100) | int }}%)</span></li>
+        </ul>
+      </article>
+
+      <article class="card solunar">
+        <h2>{{ t('conditions.solunar') }}</h2>
+        {% if solunar.major or solunar.minor %}
+          <ul class="periods">
+            {% for p in solunar.major %}
+              <li class="period major"><span class="badge badge-major">major</span> {{ p.start }} → {{ p.end }} <span class="score">{{ p.score }}</span></li>
+            {% endfor %}
+            {% for p in solunar.minor %}
+              <li class="period minor"><span class="badge badge-minor">minor</span> {{ p.start }} → {{ p.end }} <span class="score">{{ p.score }}</span></li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="muted">{{ t('errors.no_data') }}</p>
+        {% endif %}
+      </article>
+    </div>
+
+    <article class="card tips-list">
+      <h2>{{ t('conditions.tips') }}</h2>
+      {% if tips %}
+        <ul class="tips">
+        {% for tip in tips %}
+          <li class="tip">
+            <p class="tip-text">{% if lang == 'fr' %}{{ tip.tip_text_fr }}{% else %}{{ tip.tip_text_en }}{% endif %}</p>
+            <p class="tip-meta">
+              <span class="badge">{{ t('tips.confidence') }}: {{ tip.confidence }}</span>
+              {% if tip.source_url %}<a href="{{ tip.source_url }}" rel="noopener" target="_blank">{{ t('tips.source') }}</a>{% endif %}
+            </p>
+          </li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">{{ t('conditions.no_tips') }}</p>
+      {% endif %}
+    </article>
+  </section>
+{% endblock %}
+{% block footer_widget %}
+  <div class="eg-affiliate-banners"
+       data-program="us-expedia"
+       data-network="pz"
+       data-layout="leaderboard"
+       data-image="city"
+       data-message="none"
+       data-camref="1101l5IQud"
+       data-pubref="pechepro-tips"
+       data-link="home"></div>
+  <script class="eg-affiliate-banners-script"
+          src="https://creator.expediagroup.com/products/banners/assets/eg-affiliate-banners.js"></script>
+{% endblock %}

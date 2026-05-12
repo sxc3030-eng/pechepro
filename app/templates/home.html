@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block main %}
+  <section class="home">
+    <h1>{{ t('home.title') }}</h1>
+    <p class="subtitle">{{ t('home.subtitle') }}</p>
+
+    <form id="recommend-form" action="/conditions" method="get" novalidate>
+      <div class="form-row">
+        <label for="species">{{ t('form.species') }}</label>
+        <select id="species" name="species" required aria-required="true">
+          <option value="" disabled selected>{{ t('loading') }}</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="water">{{ t('form.water_type') }}</label>
+        <select id="water" name="water" required aria-required="true">
+          <option value="" disabled selected>{{ t('loading') }}</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="region">{{ t('form.region') }}</label>
+        <select id="region" name="region">
+          <option value="">— {{ t('loading') }} —</option>
+        </select>
+      </div>
+
+      <input type="hidden" id="lat" name="lat">
+      <input type="hidden" id="lon" name="lon">
+
+      <div class="form-actions">
+        <button type="button" id="use-gps" class="btn btn-secondary">{{ t('form.use_gps') }}</button>
+        <button type="submit" class="btn btn-primary">{{ t('home.cta') }}</button>
+      </div>
+
+      <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+{% endblock %}
