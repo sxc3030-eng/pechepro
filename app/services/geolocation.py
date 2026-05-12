@@ -49,11 +49,15 @@ def get_current_location() -> tuple[float, float] | None:
         return None
 
 
-def _query_windows_location() -> tuple[float, float] | None:
+def _query_windows_location() -> tuple[float, float] | None:  # pragma: no cover
     """Call winsdk to get the current position.
 
     Synchronous wrapper around the async ``get_geoposition_async()`` API. Returns None
     if no position is available; raises on permission denial or missing winsdk install.
+
+    Excluded from coverage: tests mock this function at the module boundary so the
+    body never executes, and Linux CI has no ``winsdk`` install. Covered indirectly
+    through manual on-Windows verification.
     """
     import asyncio
 
