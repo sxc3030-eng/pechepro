@@ -205,3 +205,43 @@ def test_sync_force_bypasses_24h_skip(empty_db: sqlite3.Connection) -> None:
         ("species",),
     ).fetchone()
     assert new_meta == ('"new"',)
+
+
+# ---------------------------------------------------------------------------
+# Malformed CSV must not corrupt the DB (transactional safety)
+# ---------------------------------------------------------------------------
+
+
+@freeze_time("2026-06-21 12:00:00")
+def test_sync_malformed_csv_does_not_corrupt_db(empty_db: sqlite3.Connection) -> None:
+    """Bad CSV columns → error logged, original DB untouched (no half-applied delete)."""
+    empty_db.execute(
+        "INSERT INTO species (id, common_name_fr, common_name_en, scientific_name) "
+        "VALUES (3, 'Existing', 'Existing-en', 'Sander')"
+    )
+    empty_db.commit()
+
+    # Bogus column names that do not exist on the species table → INSERT will
+    # raise sqlite3.OperationalError → transaction rolls back → row preserved.
+    bad_csv = "bogus_col_1,bogus_col_2\n1,2\n"
+    with respx.mock(base_url="https://raw.githubusercontent.com") as router:
+        router.get("/sxc3030-eng/pechepro/main/data/curated/species.csv").mock(
+            return_value=httpx.Response(
+                200, content=bad_csv.encode("utf-8"), headers={"ETag": '"x"'}
+            )
+        )
+        router.route().mock(return_value=httpx.Response(404))
+
+        result = data_sync.sync_curated_data(empty_db, force=True)
+
+    # The error should reference species
+    assert any("species" in e for e in result["errors"])
+    # The pre-existing row must still be present (rollback worked).
+    rows = empty_db.execute("SELECT COUNT(*) FROM species").fetchone()
+    assert rows[0] == 1
+    # And data_sync_meta must NOT have been updated for species (we never
+    # reached the _bump_synced_at call).
+    meta = empty_db.execute(
+        "SELECT COUNT(*) FROM data_sync_meta WHERE table_name = ?", ("species",)
+    ).fetchone()
+    assert meta[0] == 0
