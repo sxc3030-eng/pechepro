@@ -1,0 +1,5 @@
+﻿id,period_type,duration_minutes,weight
+1,major,120,1.0
+2,minor,60,0.6
+3,major,90,0.8
+4,minor,45,0.5
