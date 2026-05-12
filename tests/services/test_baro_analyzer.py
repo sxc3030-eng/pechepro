@@ -1,4 +1,8 @@
-"""Tests for app.services.baro_analyzer — pressure trend classification."""
+"""Tests for app.services.baro_analyzer — pressure trend + species activity scoring."""
+
+import sqlite3
+
+import pytest
 
 from app.services import baro_analyzer
 
@@ -67,3 +71,77 @@ def test_analyze_trend_default_hours_window() -> None:
     """Default hours_window=6 works without explicit kwarg."""
     pressures = [1010.0, 1010.5, 1011.0, 1011.5, 1012.0, 1012.5, 1013.0]
     assert baro_analyzer.analyze_trend(pressures) == "rising"
+
+
+# --------------------------------------------------------------------------- #
+# species_activity_score                                                      #
+# --------------------------------------------------------------------------- #
+
+
+def _seed_baro_rules(db: sqlite3.Connection) -> None:
+    """Insert a species + 3 baro_rules rows for testing."""
+    db.execute(
+        "INSERT INTO species (id, common_name_fr, common_name_en, scientific_name) "
+        "VALUES (3, 'Doré jaune', 'Walleye', 'Sander vitreus')"
+    )
+    db.executemany(
+        "INSERT INTO baro_rules (species_id, baro_trend, activity_score, notes_fr, notes_en) "
+        "VALUES (?, ?, ?, ?, ?)",
+        [
+            (3, "rising", 6, "Activité modérée", "Moderate activity"),
+            (3, "falling", 9, "Pic d'activité", "Peak activity"),
+            (3, "steady", 4, "Calme", "Calm"),
+        ],
+    )
+    db.commit()
+
+
+def test_species_activity_score_returns_db_value(empty_db: sqlite3.Connection) -> None:
+    """Each seeded (species, trend) row returns its activity_score."""
+    _seed_baro_rules(empty_db)
+    assert baro_analyzer.species_activity_score(empty_db, species_id=3, baro_trend="falling") == 9
+    assert baro_analyzer.species_activity_score(empty_db, species_id=3, baro_trend="rising") == 6
+    assert baro_analyzer.species_activity_score(empty_db, species_id=3, baro_trend="steady") == 4
+
+
+def test_species_activity_score_no_rule_returns_default(empty_db: sqlite3.Connection) -> None:
+    """Unknown species_id returns the neutral default 5."""
+    _seed_baro_rules(empty_db)
+    assert baro_analyzer.species_activity_score(empty_db, species_id=999, baro_trend="rising") == 5
+
+
+def test_species_activity_score_partial_rule_returns_default(
+    empty_db: sqlite3.Connection,
+) -> None:
+    """Known species but missing trend row returns the neutral default 5."""
+    empty_db.execute(
+        "INSERT INTO species (id, common_name_fr, common_name_en, scientific_name) "
+        "VALUES (4, 'Achigan', 'Bass', 'Micropterus')"
+    )
+    empty_db.execute(
+        "INSERT INTO baro_rules (species_id, baro_trend, activity_score) " "VALUES (4, 'rising', 7)"
+    )
+    empty_db.commit()
+    assert baro_analyzer.species_activity_score(empty_db, species_id=4, baro_trend="falling") == 5
+
+
+def test_species_activity_score_invalid_trend_raises(empty_db: sqlite3.Connection) -> None:
+    """Trend not in {rising, falling, steady} raises ValueError."""
+    _seed_baro_rules(empty_db)
+    with pytest.raises(ValueError):
+        baro_analyzer.species_activity_score(empty_db, species_id=3, baro_trend="bogus")
+
+
+def test_species_activity_score_empty_string_trend_raises(
+    empty_db: sqlite3.Connection,
+) -> None:
+    """Empty trend string is invalid."""
+    with pytest.raises(ValueError):
+        baro_analyzer.species_activity_score(empty_db, species_id=3, baro_trend="")
+
+
+def test_species_activity_score_returns_int_type(empty_db: sqlite3.Connection) -> None:
+    """Return type is int, not sqlite3 row tuple."""
+    _seed_baro_rules(empty_db)
+    result = baro_analyzer.species_activity_score(empty_db, species_id=3, baro_trend="rising")
+    assert isinstance(result, int)
