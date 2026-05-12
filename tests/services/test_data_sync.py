@@ -359,3 +359,60 @@ def test_sync_connect_error_records_error(empty_db: sqlite3.Connection) -> None:
     # Every table produced an error, all of which mention network or Connect
     assert len(result["errors"]) == len(data_sync._SYNC_TABLES)
     assert all("network" in e or "Connect" in e for e in result["errors"])
+
+
+# ---------------------------------------------------------------------------
+# 404 must not touch data_sync_meta (so the next launch retries)
+# ---------------------------------------------------------------------------
+
+
+@freeze_time("2026-06-21 12:00:00")
+def test_sync_404_does_not_pollute_meta(empty_db: sqlite3.Connection) -> None:
+    """404 is a soft-error: the table is NOT marked synced, so the next launch retries."""
+    with respx.mock() as router:
+        router.route().mock(return_value=httpx.Response(404))
+        result = data_sync.sync_curated_data(empty_db, force=True)
+
+    # No table successfully synced
+    assert result["tables_synced"] == []
+    # And no meta row was written
+    rows = empty_db.execute("SELECT COUNT(*) FROM data_sync_meta").fetchone()
+    assert rows[0] == 0
+    # Every table appears in errors with a not_found tag
+    assert len(result["errors"]) == len(data_sync._SYNC_TABLES)
+    assert all("not_found" in e for e in result["errors"])
+
+
+# ---------------------------------------------------------------------------
+# UTF-8 BOM is silently stripped (CSVs may be authored on Windows)
+# ---------------------------------------------------------------------------
+
+
+@freeze_time("2026-06-21 12:00:00")
+def test_sync_strips_utf8_bom(empty_db: sqlite3.Connection) -> None:
+    """A CSV authored with a UTF-8 BOM must still parse correctly.
+
+    Without ``utf-8-sig`` decoding, the BOM character becomes part of the first
+    column name (e.g. ``\\ufeffid`` instead of ``id``) and the insert silently
+    drops the ``id`` value to NULL. We assert the actual id 3 lands in the row.
+    """
+    bom_csv = "﻿" + (
+        "id,common_name_fr,common_name_en,scientific_name\n" "3,Doré jaune,Walleye,Sander vitreus\n"
+    )
+    with respx.mock() as router:
+        router.get(
+            "https://raw.githubusercontent.com/sxc3030-eng/pechepro/main/data/curated/species.csv"
+        ).mock(
+            return_value=httpx.Response(
+                200,
+                content=bom_csv.encode("utf-8"),
+                headers={"ETag": '"bom"'},
+            )
+        )
+        router.route().mock(return_value=httpx.Response(404))
+
+        result = data_sync.sync_curated_data(empty_db, force=True)
+
+    assert "species" in result["tables_synced"]
+    row = empty_db.execute("SELECT id, common_name_fr FROM species").fetchone()
+    assert row == (3, "Doré jaune")
