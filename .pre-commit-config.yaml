@@ -23,5 +23,5 @@ repos:
     rev: v1.13.0
     hooks:
       - id: mypy
-        additional_dependencies: ['types-requests']
+        additional_dependencies: ['types-requests', 'httpx==0.28.1']
         exclude: ^(tests/|deploy/|data/)
