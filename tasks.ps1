@@ -25,10 +25,28 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
     $PSStyle.OutputRendering = "Ansi"
 }
 
-# Always activate venv if not already
-$venvActivate = Join-Path $PSScriptRoot ".venv\Scripts\Activate.ps1"
-if ((Test-Path $venvActivate) -and (-not $env:VIRTUAL_ENV)) {
-    & $venvActivate
+# Activate venv if not already. Walks up parents to find .venv (so this script
+# works from main repo OR from any worktree under .claude/worktrees/).
+function Find-Venv {
+    $current = $PSScriptRoot
+    while ($current) {
+        $candidate = Join-Path $current ".venv\Scripts\Activate.ps1"
+        if (Test-Path $candidate) { return $candidate }
+        $parent = Split-Path $current -Parent
+        if ($parent -eq $current) { return $null }
+        $current = $parent
+    }
+    return $null
+}
+
+if (-not $env:VIRTUAL_ENV) {
+    $venvActivate = Find-Venv
+    if ($venvActivate) {
+        & $venvActivate
+    } else {
+        Write-Warning "No .venv found in $PSScriptRoot or parents. Run: python -m venv .venv ; .\.venv\Scripts\Activate.ps1 ; pip install -e .[dev]"
+        exit 1
+    }
 }
 
 function Invoke-Test {
