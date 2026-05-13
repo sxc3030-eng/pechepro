@@ -36,7 +36,7 @@ Source: "..\..\dist\pechepro.exe"; DestDir: "{app}"; Flags: ignoreversion
 [Icons]
 Name: "{group}\Pechepro"; Filename: "{app}\pechepro.exe"
 Name: "{group}\{cm:UninstallProgram,Pechepro}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\Pechepro"; Filename: "{app}\pechepro.exe"; Tasks: desktopicon
+Name: "{userdesktop}\Pechepro"; Filename: "{app}\pechepro.exe"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\pechepro.exe"; Description: "Lancer Pechepro / Launch Pechepro"; Flags: nowait postinstall skipifsilent
