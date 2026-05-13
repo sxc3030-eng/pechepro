@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write    # required for softprops/action-gh-release
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install dependencies (dev + build)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev,build]
+
+      - name: Run tests (excluding smoke)
+        run: pytest -q -m "not smoke"
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+        shell: pwsh
+
+      - name: Build .exe + installer
+        run: pwsh deploy\windows\build.ps1
+        shell: pwsh
+
+      - name: Compile installer (Inno Setup)
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+              $iscc = "${env:ProgramFiles}\Inno Setup 6\ISCC.exe"
+          }
+          & $iscc deploy\windows\installer.iss
+        shell: pwsh
+
+      - name: Verify installer size < 60 MB
+        run: |
+          $size = (Get-Item dist\pechepro-setup.exe).Length / 1MB
+          Write-Host "Installer size: $([math]::Round($size,2)) MB"
+          if ($size -gt 60) { Write-Error "Installer too large"; exit 1 }
+        shell: pwsh
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: pechepro ${{ github.ref_name }}
+          body: |
+            See [CHANGELOG.md](CHANGELOG.md) for details.
+
+            **Install:** Download `pechepro-setup.exe` below, double-click, follow the wizard.
+
+            **First launch:** SmartScreen may warn — click "More info" → "Run anyway" (V0.2 will be code-signed).
+          files: |
+            dist/pechepro-setup.exe
+            dist/pechepro.exe
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-alpha') || contains(github.ref_name, '-beta') }}
