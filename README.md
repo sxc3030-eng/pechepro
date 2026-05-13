@@ -40,3 +40,26 @@ deploy/windows/      build.ps1 + installer.iss (Inno Setup) + sign.ps1
 docs/                Specs + plans superpowers
 tests/               pytest (services + Flask routes + smoke E2E)
 ```
+
+## Install
+
+**Download** the latest installer from [GitHub Releases](https://github.com/sxc3030-eng/pechepro/releases/latest) :
+
+- `pechepro-setup.exe` — full Windows installer (recommended)
+- `pechepro.exe` — single-file portable executable (no install needed)
+
+**Run** `pechepro-setup.exe`, accept the SmartScreen warning ("More info" → "Run anyway" — V0.2 will be code-signed), and follow the wizard.
+
+**First launch :**
+1. App opens to the Home screen
+2. Allow Windows Location access (or pick a region manually)
+3. Pick a species + water type
+4. View Conditions + Tips
+
+**Uninstall :** Settings → Apps → Pechepro → Uninstall.
+
+**Manual data refresh :** the app auto-syncs curated tips from GitHub raw every 24h. To force a refresh, delete `%LOCALAPPDATA%\pechepro\pechepro.db` and relaunch.
+
+## Screenshots
+
+_To be added in V0.2_ — coming soon.
