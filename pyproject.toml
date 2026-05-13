@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pechepro"
-version = "0.1.0-dev"
+version = "0.1.0"
 description = "Application Windows standalone de pêche en Amérique du Nord"
 readme = "README.md"
 requires-python = ">=3.13"
