@@ -1,10 +1,16 @@
 # pechepro
 
-App Windows **standalone** gratuite de pêche en Amérique du Nord avec recommandations personnalisées par espèce, région et conditions (météo, pression baro, lune, soleil, solunar).
+> App Windows **standalone** gratuite de pêche en Amérique du Nord avec recommandations personnalisées par espèce, région et conditions (météo, pression baro, lune, soleil, solunar).
 
-**Status :** Spec v0.1 (v3 — pivot architecture pure desktop, zéro backend) — implémentation à venir
-**Spec design :** [docs/superpowers/specs/2026-05-09-pechepro-design.md](docs/superpowers/specs/2026-05-09-pechepro-design.md)
+![Status](https://img.shields.io/badge/status-v0.1.0%20alpha-brightgreen)
+![Python](https://img.shields.io/badge/python-3.13-blue)
+![Tests](https://img.shields.io/badge/tests-311%20passing-success)
+![Coverage](https://img.shields.io/badge/coverage-~96%25-success)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
+
+**Status :** v0.1.0 alpha shipped (2026-05-12) — Windows desktop app live · 15 espèces · 65 régions · 310 tips curés · FR + EN
 **Distribution :** `.exe` Windows installable directement, aucun service à déployer
+**Spec design :** [docs/superpowers/specs/2026-05-09-pechepro-design.md](docs/superpowers/specs/2026-05-09-pechepro-design.md)
 
 ## Architecture rapide
 
@@ -59,6 +65,13 @@ tests/               pytest (services + Flask routes + smoke E2E)
 **Uninstall :** Settings → Apps → Pechepro → Uninstall.
 
 **Manual data refresh :** the app auto-syncs curated tips from GitHub raw every 24h. To force a refresh, delete `%LOCALAPPDATA%\pechepro\pechepro.db` and relaunch.
+
+## Tech stack
+
+- **Python 3.13** · **PyWebView 5.4** · **Flask 3.0.3** · SQLite stdlib
+- **311 pytest tests** · ~96 % coverage on services layer
+- Build pipeline : PyInstaller 6.11.1 + Inno Setup 6 + GitHub Actions (windows-latest)
+- Astral (sun/moon), Open-Meteo (weather + baro), USGS Water Data (US), ECCC (Canada)
 
 ## Screenshots
 
