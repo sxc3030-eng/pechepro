@@ -11,6 +11,10 @@ repos:
         args: ['--maxkb=500']
       - id: mixed-line-ending
         args: ['--fix=lf']
+        # Windows-only scripts MUST stay CRLF per .gitattributes — excluding
+        # them here prevents an infinite loop where the hook flips them to LF
+        # and git checkout flips them back on the next Windows checkout.
+        exclude: '\.(ps1|psm1|psd1|bat|cmd|iss)$'
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.8.4
